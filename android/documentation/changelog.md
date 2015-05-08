@@ -3,6 +3,8 @@
 v2.3.0    Add drawing support. Includes polygons, polylines, and circles. [TIMOB-15410]
           Ensure region property is set after mapMove on android to match behavior of ios. [TIMOB-17857]
 
+v2.3.0    Fixed a couple crashing issues with map, added API name. [TIMOB-18244]
+
 v2.2.5    Fixed the example. [MOD-2073]
 
 v2.2.4    Added support for density-specific images for leftButton and rightButton properties. [MOD-1771]

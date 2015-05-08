@@ -59,6 +59,7 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 	protected LatLngBounds preLayoutUpdateBounds;
 	protected ArrayList<TiMarker> timarkers;
 	protected AnnotationProxy selectedAnnotation;
+	private int retries = 0;
 
 	private ArrayList<CircleProxy> currentCircles;
 	private ArrayList<PolygonProxy> currentPolygons;
@@ -142,11 +143,26 @@ GoogleMap.OnMapLongClickListener, GoogleMap.OnMapLoadedCallback
 	@Override
 	protected void onViewCreated() {
 		map = acquireMap();
-		// A workaround for
-		// https://code.google.com/p/android/issues/detail?id=11676 pre Jelly
-		// Bean.
-		// This problem doesn't exist on 4.1+ since the map base view changes to
-		// TextureView from SurfaceView.
+
+		
+		if (map == null && retries < 10) {
+			Log.w(TAG, "Cannot load map. Retrying");
+			sendMessage();
+			retries++;
+			return;
+		}
+		
+		if (map == null) {
+			Log.e(TAG, "Unable to load map");
+			return;
+		}
+		
+		//successfully loaded map
+		retries = 0;
+
+		//A workaround for https://code.google.com/p/android/issues/detail?id=11676 pre Jelly Bean.
+		//This problem doesn't exist on 4.1+ since the map base view changes to TextureView from SurfaceView. 
+
 		if (Build.VERSION.SDK_INT < 16) {
 			View rootView = proxy.getActivity().findViewById(
 					android.R.id.content);
